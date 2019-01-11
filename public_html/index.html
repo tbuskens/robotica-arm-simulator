@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simulatie</title>
+</head>
+<body style="background: black;">
+<canvas id="canvasSim" width="500" height="500" style="border:1px solid #c3c3c3; background: white;">
+    Your browser does not support the canvas element.
+</canvas>
+
+<script src="js/index.js"></script>
+<script src="js/ros.js"></script>
+<script>
+    function sendData(arm){
+        console.log('run!');
+
+        switch(arm){
+            case 1:
+                rotateArm1(document.getElementById('arm1').value);
+                break;
+            case 2:
+                rotateArm2(document.getElementById('arm2').value);
+                break;
+            case 3:
+                rotateArm3(document.getElementById('arm3').value);
+                break;
+        }
+    }
+</script>
+
+<br><br><br>
+<input type="text" id="arm1" />
+<button onclick="sendData(1);">Send</button>
+<br><br>
+<input type="text" id="arm2" />
+<button onclick="sendData(2);">Send</button>
+<br><br>
+<input type="text" id="arm3" />
+<button onclick="sendData(3);">Send</button>
+
+
+
+</body>
+</html>
