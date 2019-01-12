@@ -80,8 +80,11 @@ function rotateArm3(degrees){
     redrawArms();
 }
 
-function rotate(degrees, x, y, xO = 0, yO = 0){
-    degrees = degrees * Math.PI / 180 * -1;
+function rotate(degrees, x, y, xO = 0, yO = 0, bDegrees = true) {
+    // console.log(degrees);
+    if(bDegrees) {
+        degrees = degrees * Math.PI / 180 * -1;
+    }
 
     // console.log(xO);
     // console.log(yO);
@@ -90,7 +93,7 @@ function rotate(degrees, x, y, xO = 0, yO = 0){
 
     // console.log("X: " + xEnd);
     // console.log("Y: " + yEnd);
-    console.log("\n\n");
+    // console.log("\n\n");
 
     return {x: xEnd, y: yEnd};
 }
