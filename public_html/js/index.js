@@ -80,10 +80,18 @@ function rotateArm3(degrees){
     redrawArms();
 }
 
+function convertRadialToDegrees(angle) {
+    return angle*180/Math.PI;
+}
+
+function convertDegreesToRadial(degrees) {
+    return degrees * Math.PI / 180 * -1;
+}
+
 function rotate(degrees, x, y, xO = 0, yO = 0, bDegrees = true) {
     // console.log(degrees);
     if(bDegrees) {
-        degrees = degrees * Math.PI / 180 * -1;
+        degrees = convertDegreesToRadial(degrees);
     }
 
     // console.log(xO);

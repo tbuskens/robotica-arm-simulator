@@ -10,9 +10,9 @@ function convertROStoSimulator(joint1, joint2, joint3) {
     angleArm2Old = angleArm2;
     angleArm3Old = angleArm3;
 
-    angleArm1 = joint1*180/Math.PI;
-    angleArm2 = joint2*180/Math.PI;
-    angleArm3 = joint3*180/Math.PI;
+    angleArm1 = -1 * convertRadialToDegrees(joint1);
+    angleArm2 = -1 * convertRadialToDegrees(joint2) + 90;
+    angleArm3 = -1 * convertRadialToDegrees(joint3);
     rotateArm1(angleArm1-angleArm1Old);
     rotateArm2(angleArm2-angleArm2Old);
     rotateArm3(angleArm3-angleArm3Old);
@@ -28,7 +28,7 @@ function runAnimation() {
     if(animation[nAnimationNow] != null) {
         convertROStoSimulator(animation[nAnimationNow][0].angle, animation[nAnimationNow][1].angle, animation[nAnimationNow][2].angle);
         nAnimationNow++;
-        setTimeout(runAnimation, 500);
+        setTimeout(runAnimation, 200);
     } else {
         nAnimationNow = 0;
         animationLock = false;
@@ -45,13 +45,21 @@ function simplifyAngle(angle)
     return angle;
 }
 
-function convertAngleToROS(angle) {
-    return angle/60;
-}
-
 function doCCD(bones, nBones, targetX, targetY, maxDistance) {
+    // if(targetX < 0) {
+    //     targetX = 0;
+    // }
+    //
+    // if(targetY < -10) {
+    //     targetY = -10;
+    // }
+
     animation = [];
-    for(nIteration = 0; nIteration < 10; nIteration++) {
+    for(nIteration = 0; nIteration < 2; nIteration++) {
+        console.log(robotBones[0].angle);
+        console.log(robotBones[1].angle);
+        console.log(robotBones[2].angle);
+
         console.log('Iteration: ' + (nIteration+1));
         returnVal = doCCDIteration(robotBones, nBones, targetX, targetY, maxDistance);
         console.log(returnVal);
@@ -59,17 +67,20 @@ function doCCD(bones, nBones, targetX, targetY, maxDistance) {
             break;
         }
     }
+    console.log(robotBones);
     return nIteration;
 }
 
+// Set an epsilon value to prevent division by small numbers.
+epsilon = 0.0001;
+
+// Set max arc length a bone can move the end effector an be considered no motion
+// so that we can detect a failure state.
+trivialArcLength = 0.00001;
+
+radialMaxTurn = 1.8;
+
 function doCCDIteration(bones, nBones, targetX, targetY, maxDistance) {
-
-    // Set an epsilon value to prevent division by small numbers.
-    epsilon = 0.0001;
-
-    // Set max arc length a bone can move the end effector an be considered no motion
-    // so that we can detect a failure state.
-    trivialArcLength = 0.00001;
 
     arrivalDistSqr = maxDistance*maxDistance;
 
@@ -109,6 +120,9 @@ function doCCDIteration(bones, nBones, targetX, targetY, maxDistance) {
     endX = worldBones[nBones-1].x;
     endY = worldBones[nBones-1].y;
 
+    console.log("endX -> " + endX);
+    console.log("endY -> " + endY);
+
     //===
     // Perform CCD on the bones by optimizing each bone in a loop
     // from the final bone to the root bone
@@ -141,23 +155,32 @@ function doCCDIteration(bones, nBones, targetX, targetY, maxDistance) {
 
         // Clamp the cosine into range when computing the angle (might be out of range
         // due to floating point error).
-        rotAng = Math.acos(Math.max(-1, Math.min(1,cosRotAng)));
+        rotAng = Math.acos(cosRotAng);
         if(sinRotAng < 0.0) {
             rotAng = -rotAng;
         }
 
+        // Rotate the current bone in local space (this value is output to the user)
+        newAngle = simplifyAngle(bones[boneIdx].angle + rotAng);
+        switch(true) {
+            case newAngle < bones[boneIdx].minAngle:
+                newAngle = bones[boneIdx].minAngle;
+                break;
+            case newAngle > bones[boneIdx].maxAngle:
+                newAngle = bones[boneIdx].maxAngle;
+        }
+        bones[boneIdx].angle = newAngle;
+
         // Rotate the end effector position.
         endX = worldBones[boneIdx].x + cosRotAng*curToEndX - sinRotAng*curToEndY;
         endY = worldBones[boneIdx].y + sinRotAng*curToEndX + cosRotAng*curToEndY;
-
-        // Rotate the current bone in local space (this value is output to the user)
-        bones[boneIdx].angle =  simplifyAngle(bones[boneIdx].angle + rotAng);
 
         // Check for termination
         endToTargetX = (targetX-endX);
         endToTargetY = (targetY-endY);
 
 
+        // Animate to canvas
         animation.push(JSON.parse(JSON.stringify(robotBones)));
 
         // robotBones = JSON.parse(JSON.stringify(bones));
@@ -191,22 +214,30 @@ robotBones = {
     0: {
         x: 0,
         y: 0,
-        angle: simplifyAngle(0),
+        angle: 0,
+        minAngle: -1.5,
+        maxAngle: 1.5,
     },
     1: {
         x: 0,
         y: 10,
-        angle: simplifyAngle(0),
+        angle: 0,
+        minAngle: -1.2,
+        maxAngle: 1.2,
     },
     2: {
-        x: 0,
-        y: 10,
-        angle: simplifyAngle(0),
+        x: 10,
+        y: 0,
+        angle: 0,
+        minAngle: -1.2,
+        maxAngle: 1.2,
     },
     3: {
-        x: 0,
-        y: 10,
-        angle: simplifyAngle(0),
+        x: 10,
+        y: 0,
+        angle: 0,
+        minAngle: 0,
+        maxAngle: 0,
     }
 };
 
@@ -214,36 +245,25 @@ robotBones = {
 function main(){
     console.log('run!');
 
-    // robotBones[0].angle = simplifyAngle(90 * Math.PI / 180 * -1);
-    // robotBones[1].angle = simplifyAngle(-90 * Math.PI / 180 * -1);
-    // robotBones[2].angle = simplifyAngle(-90 * Math.PI / 180 * -1);
-
-    // console.log(robotBones);
-
-    // console.log(robotBones);
-    nIterations = doCCD(robotBones, 4, 30, 0, 0.01);
+    nIterations = doCCD(robotBones, 4, 20, 0, 1);
     runAnimation();
-    setTimeout(run2, 1500+(nIterations*500*3));
+    setTimeout(run2, 500+(nIterations*200*3));
 }
 
 
 function run2() {
-    // robotBones[0].angle = simplifyAngle(0 * Math.PI / 180 * -1);
-    // robotBones[1].angle = simplifyAngle(0 * Math.PI / 180 * -1);
-    // robotBones[2].angle = simplifyAngle(0 * Math.PI / 180 * -1);
-
-    nIterations = doCCD(robotBones, 4, 0, 30, 1);
+    nIterations = doCCD(robotBones, 4, 10, 20, 1);
     runAnimation();
-    setTimeout(run3, 1500+(nIterations*500*3));
+    setTimeout(run3, 500+(nIterations*200*3));
 }
 
 function run3() {
-    nIterations = doCCD(robotBones, 4, -20, -10, 1);
+    nIterations = doCCD(robotBones, 4, 0, 30, 1);
     runAnimation();
 }
 
 
 
-convertROStoSimulator(0, 0, 0); // startPosition
+convertROStoSimulator(robotBones[0].angle, robotBones[1].angle, robotBones[2].angle); // startPosition
 setTimeout(main, 2000);
 // main(); // Program starts here!
