@@ -1,11 +1,8 @@
 language: node_js
 node_js:
-  - "0.10"
-before_script:
-  #- npm install -g bower
-  - npm install -g gulp
-  - npm install phantomjs
-  - npm install -g karma
-  #- bower install
-  - gulp build
-  - gulp style
+- '8'
+- '7'
+
+notifications:
+  on_success: always # default: change
+  on_failure: always # default: always
