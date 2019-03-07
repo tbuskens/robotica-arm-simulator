@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "author": "T. Buskens",
   "scripts": {
-    "start": "node ./ci/main.js",
-    "test": "npm run simulator",
-    "simulator":"./public_html/js/index.js"
+    "start": "node ./public_html/js/index.js",
+    "test": "node ./ci/main.js",
   }
 }
