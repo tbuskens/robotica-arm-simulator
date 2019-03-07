@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "test": "ci/test"
+    "test": "ci/test.js"
   }
 }
