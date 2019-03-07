@@ -1,3 +1,5 @@
-"scripts": {
-"test": "ci/test"
-},
+{
+  "scripts": {
+    "test": "ci/test"
+  }
+}
