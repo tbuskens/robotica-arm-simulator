@@ -1,5 +1,10 @@
 {
+  "name": "robotica-arm-simulator",
+  "version": "0.1.0",
+  "author": "T. Buskens",
   "scripts": {
-    "test": "ci/test.js"
-  }
+    "start": "node ./ci/main.js",
+    "test": "npm run simulator",
+    "simulator":"./public_html/js/index.js",
+  },
 }
