@@ -4,6 +4,6 @@
   "author": "T. Buskens",
   "scripts": {
     "start": "node ./public_html/js/index.js",
-    "test": "node ./ci/main.js",
+    "test": "node ./ci/main.js"
   }
 }
