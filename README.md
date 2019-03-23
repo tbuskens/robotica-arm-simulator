@@ -4,5 +4,5 @@
 [![Coverage Status](https://coveralls.io/repos/github/tbuskens/robotica-arm-simulator/badge.svg?branch=master)](https://coveralls.io/github/tbuskens/robotica-arm-simulator?branch=master)
 
 # Robotica arm simulator
-An Arm Simulator for the Robotica Project where you can test your own CCD algorithm
+An Arm Simulator for the Robotica Project where you can test your own CCD algorithm (by using the class UI)
 
