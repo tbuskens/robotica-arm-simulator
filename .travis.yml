@@ -1,8 +1,5 @@
+sudo: required
 language: node_js
 node_js:
-- '8'
-- '7'
-
-notifications:
-  on_success: always # default: change
-  on_failure: always # default: always
+  - iojs
+after_success: 'npm run coveralls'
