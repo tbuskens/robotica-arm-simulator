@@ -8,35 +8,20 @@
     Your browser does not support the canvas element.
 </canvas>
 
-<script src="js/index.js"></script>
-<script src="js/ros.js"></script>
+<script src="assets/sim-ui.js"></script>
 <script>
-    function sendData(arm){
-        console.log('run!');
-
-        switch(arm){
-            case 1:
-                rotateArm1(document.getElementById('arm1').value);
-                break;
-            case 2:
-                rotateArm2(document.getElementById('arm2').value);
-                break;
-            case 3:
-                rotateArm3(document.getElementById('arm3').value);
-                break;
-        }
-    }
+    var ui = new UI("canvasSim");
 </script>
 
 <br><br><br>
 <input type="text" id="arm1" />
-<button onclick="sendData(1);">Send</button>
+<button onclick="ui.sendData(1);">Send</button>
 <br><br>
 <input type="text" id="arm2" />
-<button onclick="sendData(2);">Send</button>
+<button onclick="ui.sendData(2);">Send</button>
 <br><br>
 <input type="text" id="arm3" />
-<button onclick="sendData(3);">Send</button>
+<button onclick="ui.sendData(3);">Send</button>
 
 
 
