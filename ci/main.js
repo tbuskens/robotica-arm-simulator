@@ -1,4 +1,4 @@
-const UI = require("../public_html/assets/sim-ui.js")
+const UI = require("../public_html/assets/sim-ui.js");
 
 const ui = new UI();
 
