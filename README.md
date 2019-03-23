@@ -7,6 +7,6 @@
 An Arm Simulator for the Robotica Project where you can test your own CCD algorithm (by using the class UI)
 
 ## @Todo
-1. Make an example.
-2. Better Unittest.
-3. Extend this lib with CCD.
+ 1. Make an example.
+ 2. Better Unittest.
+ 3. Extend this lib with CCD.
