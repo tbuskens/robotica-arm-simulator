@@ -1,9 +1,14 @@
 {
   "name": "robotica-arm-simulator",
-  "version": "0.1.0",
-  "author": "T. Buskens",
+  "version": "0.1.1",
+  "main": "ci/main.js",
   "scripts": {
-    "start": "node ./public_html/js/index.js",
-    "test": "node ./ci/main.js"
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "nyc": "^13.3.0"
   }
 }
